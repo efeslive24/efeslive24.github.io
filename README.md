@@ -23,7 +23,8 @@ Türkçe, reklamsız-önyüklemeli, **65 araçlık** ücretsiz çevrimiçi araç
 - **Next.js** (App Router, statik dışa aktarma) + **React 19** + **TypeScript** + **Tailwind CSS v4**
 - İşleme tamamen istemci tarafında: pdf-lib, pdfjs-dist, jspdf, qrcode, exifr
 - Testler: Vitest (113 test)
-- Barındırma hedefi: **Cloudflare Pages** (ücretsiz katman) + tek bir **Cloudflare Worker** (yalnızca link araçları için)
+- Canlı yayın: **https://efeslive24.github.io** (GitHub Pages, kök alan adı)
+- Kendi alan adı için önerilen hedef: **Cloudflare Pages** (ücretsiz katman) + tek bir **Cloudflare Worker** (yalnızca link araçları için)
 
 ## Yerel geliştirme
 
@@ -69,26 +70,35 @@ node scripts/serve-out.cjs   # http://localhost:8734
 
 ### Alternatif: GitHub Pages (hesap gerektirmez — GitHub hesabınız yeter)
 
-Statik çıktı olduğu için site, GitHub hesabınızla ücretsiz yayınlanabilir:
+Statik çıktı olduğu için site, GitHub hesabınızla ücretsiz yayınlanabilir. Bu depo `efeslive24.github.io` adıyla yeniden adlandırılmıştır, bu yüzden site **kök alan adında** yayınlanır: `https://efeslive24.github.io/` (alt yol yoktur).
+
+Kök alan adı derlemesi (varsayılan — ek ortam değişkeni gerekmez):
 
 ```bash
-# Alt yol derlemesi (depo adınıza göre)
-# Windows/Git Bash: MSYS_NO_PATHCONV=1 gerekir
-NEXT_PUBLIC_BASE_PATH=/free-online-tools \
-NEXT_PUBLIC_SITE_URL=https://KULLANICIADI.github.io/free-online-tools \
 npm run build
+```
 
-# out/ içeriğini gh-pages dalına yükle
+Alt yolda yayın için (örn. `KULLANICIADI.github.io/depo-adi/` proje sayfası):
+
+```bash
+# Windows/Git Bash: MSYS_NO_PATHCONV=1 gerekir
+NEXT_PUBLIC_BASE_PATH=/depo-adi \
+NEXT_PUBLIC_SITE_URL=https://KULLANICIADI.github.io/depo-adi \
+npm run build
+```
+
+`out/` içeriğini `gh-pages` dalına yükleme:
+
+```bash
 git clone --no-checkout . /tmp/gh-pages-deploy
 cd /tmp/gh-pages-deploy
-git remote set-url origin https://github.com/KULLANICIADI/free-online-tools.git
 git switch --orphan gh-pages
 cp -r <PROJE_YOLU>/out/. .
 git add -A && git commit -m "Deploy: GitHub Pages"
 git push -u origin gh-pages
 ```
 
-Site `https://KULLANICIADI.github.io/free-online-tools/` adresinde yayınlanır. Not: GitHub Pages `_headers` güvenlik başlıklarını uygulamaz; üretim için önerilen yol Cloudflare Pages'tır. Kök alan adında yayın için `NEXT_PUBLIC_BASE_PATH` değerini boş bırakın.
+Not: GitHub Pages `_headers` güvenlik başlıklarını uygulamaz; güvenlik başlıkları ve kendi alan adı için üretimde önerilen yol Cloudflare Pages'tır.
 
 ## Worker kurulumu (URL kısaltıcı + yönlendirme kontrolü)
 
