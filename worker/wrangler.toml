@@ -1,0 +1,18 @@
+# Ücretsiz Çevrimiçi Araçlar Worker yapılandırması
+#
+# Kurulum adımları (ayrıntılar ana README'de):
+#   1. npx wrangler login
+#   2. npx wrangler kv namespace create SHORT_LINKS
+#      → Çıktıdaki "id" değerini aşağıya yapıştırın.
+#   3. npx wrangler deploy
+
+name = "free-tools-worker"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[[kv_namespaces]]
+binding = "SHORT_LINKS"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+# İsteğe bağlı: yalnızca belirli bir kaynaktan gelen istekleri kabul etmek için
+# [vars] bölümüne ALLOWED_ORIGIN = "https://www.siteadiniz.com" ekleyebilirsiniz.

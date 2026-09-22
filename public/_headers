@@ -1,0 +1,14 @@
+# Cloudflare Pages güvenlik başlıkları (otomatik uygulanır)
+#
+# Not: script-src içindeki 'unsafe-inline', Next.js statik dışa aktarımının
+# HTML'e gömdüğü ön yükleme betikleri için gereklidir. Reklam alan adları
+# (pagead2.googlesyndication.com, googleads.g.doubleclick.net vb.) yalnızca
+# AdSense yayıncı kimliği tanımlandığında kullanılır; önceden tanımlı olmaları
+# siteyi yavaşlatmaz, yalnızca izin listesini genişletir.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self'; connect-src 'self' https:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; frame-src https://googleads.g.doubleclick.net https://td.doubleclick.net
