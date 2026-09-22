@@ -24,6 +24,7 @@ Türkçe, reklamsız-önyüklemeli, **65 araçlık** ücretsiz çevrimiçi araç
 - İşleme tamamen istemci tarafında: pdf-lib, pdfjs-dist, jspdf, qrcode, exifr
 - Testler: Vitest (113 test)
 - Canlı yayın: **https://free-online-tools-5bg.pages.dev** (Cloudflare Pages, ücretsiz)
+- Ücretsiz kısa adres başvurusu: **https://efeslive24.js.org** — js.org PR'ı açıldı (https://github.com/js-org/js.org/pull/12527); birleştirilince custom domain Pages projesinde zaten tanımlı olduğundan otomatik yayına girer, ardından `NEXT_PUBLIC_SITE_URL` bu adresle yeniden derlenir.
 - Link araçları Worker'ı: **https://free-tools-worker.efeslive24.workers.dev** (Cloudflare Workers + KV)
 - Eski adres `https://efeslive24.github.io/` yeni adrese yönlendirir.
 
