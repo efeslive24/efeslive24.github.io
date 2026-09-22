@@ -23,8 +23,9 @@ Türkçe, reklamsız-önyüklemeli, **65 araçlık** ücretsiz çevrimiçi araç
 - **Next.js** (App Router, statik dışa aktarma) + **React 19** + **TypeScript** + **Tailwind CSS v4**
 - İşleme tamamen istemci tarafında: pdf-lib, pdfjs-dist, jspdf, qrcode, exifr
 - Testler: Vitest (113 test)
-- Canlı yayın: **https://efeslive24.github.io** (GitHub Pages, kök alan adı)
-- Kendi alan adı için önerilen hedef: **Cloudflare Pages** (ücretsiz katman) + tek bir **Cloudflare Worker** (yalnızca link araçları için)
+- Canlı yayın: **https://free-online-tools-5bg.pages.dev** (Cloudflare Pages, ücretsiz)
+- Link araçları Worker'ı: **https://free-tools-worker.efeslive24.workers.dev** (Cloudflare Workers + KV)
+- Eski adres `https://efeslive24.github.io/` yeni adrese yönlendirir.
 
 ## Yerel geliştirme
 
@@ -48,68 +49,40 @@ npm run build      # statik üretim çıktısı → out/
 node scripts/serve-out.cjs   # http://localhost:8734
 ```
 
-## Yayınlama (Cloudflare Pages — ücretsiz)
+## Yayınlama (Cloudflare Pages — ücretsiz, mevcut üretim ortamı)
 
-1. **Cloudflare hesabı** açın (site sahibi kendi hesabıyla; bu proje sizin adınıza hesap oluşturamaz).
-2. Cloudflare dashboard → **Workers & Pages → Create → Pages → Direct Upload** (veya GitHub bağlantısı).
-3. Derleme ayarları:
-   - Build command: `npm run build`
-   - Output directory: `out`
-4. **Ortam değişkenleri** (Production ortamına):
-
-   | Değişken | Açıklama | Zorunlu |
-   |---|---|---|
-   | `NEXT_PUBLIC_SITE_URL` | Sitenizin gerçek adresi, örn. `https://www.siteadiniz.com` | Evet (yayında) |
-   | `NEXT_PUBLIC_WORKER_URL` | Worker adresi, örn. `https://free-tools-worker.xxxx.workers.dev` | Yalnızca link araçları için |
-   | `NEXT_PUBLIC_ADSENSE_CLIENT` | AdSense yayıncı kimliği (`ca-pub-...`) | Yalnızca reklam için |
-   | `NEXT_PUBLIC_ADSENSE_SLOT_AUTO` / `NEXT_PUBLIC_ADSENSE_SLOT_HORIZONTAL` | Reklam birimi kimlikleri | Yalnızca reklam için |
-
-5. `public/_headers` dosyası güvenlik başlıklarını (CSP, nosniff, frame koruması) otomatik uygular; ek ayar gerekmez.
-
-**Alan adı ve DNS:** Pages projesi → "Custom domains" ile kendi alan adınızı bağlayın (DNS kayıtları Cloudflare tarafından yönlendirilir). Ardından `NEXT_PUBLIC_SITE_URL` değerini güncelleyip **yeniden derleyin** — sitemap ve canonical adresleri bu değerden üretilir.
-
-### Alternatif: GitHub Pages (hesap gerektirmez — GitHub hesabınız yeter)
-
-Statik çıktı olduğu için site, GitHub hesabınızla ücretsiz yayınlanabilir. Bu depo `efeslive24.github.io` adıyla yeniden adlandırılmıştır, bu yüzden site **kök alan adında** yayınlanır: `https://efeslive24.github.io/` (alt yol yoktur).
-
-Kök alan adı derlemesi (varsayılan — ek ortam değişkeni gerekmez):
+Bu site şu anda Cloudflare Pages'ta yayındadır. Yayın, `wrangler pages deploy` ile doğrudan yükleme (direct upload) yöntemiyle yapılır:
 
 ```bash
-npm run build
-```
-
-Alt yolda yayın için (örn. `KULLANICIADI.github.io/depo-adi/` proje sayfası):
-
-```bash
+# Yayın adreslerine göre derle
 # Windows/Git Bash: MSYS_NO_PATHCONV=1 gerekir
-NEXT_PUBLIC_BASE_PATH=/depo-adi \
-NEXT_PUBLIC_SITE_URL=https://KULLANICIADI.github.io/depo-adi \
+NEXT_PUBLIC_SITE_URL=https://free-online-tools-5bg.pages.dev \
+NEXT_PUBLIC_WORKER_URL=https://free-tools-worker.efeslive24.workers.dev \
 npm run build
+
+# Cloudflare'a yükle (giriş: npx wrangler login veya CLOUDFLARE_API_TOKEN)
+npx wrangler pages deploy out --project-name=free-online-tools --branch=main --commit-dirty=true
 ```
 
-`out/` içeriğini `gh-pages` dalına yükleme:
+`public/_headers` dosyası güvenlik başlıklarını (CSP, nosniff, frame koruması) Pages tarafından otomatik uygulanır; ek ayar gerekmez.
 
-```bash
-git clone --no-checkout . /tmp/gh-pages-deploy
-cd /tmp/gh-pages-deploy
-git switch --orphan gh-pages
-cp -r <PROJE_YOLU>/out/. .
-git add -A && git commit -m "Deploy: GitHub Pages"
-git push -u origin gh-pages
-```
+**Alan adı ve DNS:** Pages projesi → "Custom domains" ile kendi alan adınızı bağlayın (alan adınız Cloudflare'da olmalı; kayıt şirketinizde Cloudflare ad sunucularına geçirin). Ardından `NEXT_PUBLIC_SITE_URL` değerini kendi alan adınıza güncelleyip **yeniden derleyin** — sitemap ve canonical adresleri bu değerden üretilir.
 
-Not: GitHub Pages `_headers` güvenlik başlıklarını uygulamaz; güvenlik başlıkları ve kendi alan adı için üretimde önerilen yol Cloudflare Pages'tır.
+### Eski adres: GitHub Pages
+
+Statik çıktı GitHub Pages'ta da çalışır; `efeslive24.github.io` deposu şu anda yalnızca yeni adrese **yönlendirme sayfası** içerir (kopya içerik oluşmaması için). GitHub Pages `_headers` güvenlik başlıklarını uygulamaz; üretim için Cloudflare Pages kullanılır.
 
 ## Worker kurulumu (URL kısaltıcı + yönlendirme kontrolü)
 
-Bu iki araç, tarayıcı güvenlik kuralları nedeniyle küçük bir sunucu bileşeni gerektirir. Kod hazırdır (`worker/`); kurulum sizin Cloudflare hesabınızla yapılır:
+Bu iki araç, tarayıcı güvenlik kuralları nedeniyle küçük bir sunucu bileşeni gerektirir. **Worker kuruludur ve canlıdır:** `https://free-tools-worker.efeslive24.workers.dev` (KV: `SHORT_LINKS`, id `688f36695eec412bbad5863798fab008` — `worker/wrangler.toml` içinde kayıtlı).
+
+Yeni bir Cloudflare hesabına taşırken kurulum:
 
 ```bash
 cd worker
-npx wrangler login
+npx wrangler login   # veya CLOUDFLARE_API_TOKEN ortam değişkeni
 npx wrangler kv namespace create SHORT_LINKS
-# Çıktıdaki id değerini wrangler.toml içindeki
-# REPLACE_WITH_KV_NAMESPACE_ID yerine yazın.
+# Çıktıdaki id değerini wrangler.toml içindeki id satırına yazın.
 npx wrangler deploy
 ```
 

@@ -12,7 +12,7 @@ compatibility_date = "2026-09-01"
 
 [[kv_namespaces]]
 binding = "SHORT_LINKS"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "688f36695eec412bbad5863798fab008"
 
 # İsteğe bağlı: yalnızca belirli bir kaynaktan gelen istekleri kabul etmek için
 # [vars] bölümüne ALLOWED_ORIGIN = "https://www.siteadiniz.com" ekleyebilirsiniz.
