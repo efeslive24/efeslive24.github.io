@@ -10,9 +10,10 @@ import { downloadBlob } from "@/components/ui/copy-button";
 import { Label, Select } from "@/components/ui/field";
 import { formatBytes, bytesToBlob } from "../media-utils";
 import { IconBolt } from "@/components/icons";
+import { PDFJS_WORKER_SRC } from "@/lib/constants/site";
 
-// Çalışan dosyası build sırasında scripts/copy-assets.mjs ile public/pdfjs'e kopyalanır.
-pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.mjs";
+// Worker dosyası derleme öncesi scripts/copy-assets.mjs ile public/pdfjs/ altına kopyalanır.
+pdfjs.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_SRC;
 
 type Mode = "light" | "strong";
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LegalLayout } from "@/components/layout/legal-layout";
 import { SITE_NAME, SITE_URL, CONTACT_EMAIL } from "@/lib/constants/site";
 
@@ -72,7 +73,7 @@ export default function PrivacyPolicyPage() {
             <p>
               Sitemiz temel işlevselliği için çerez kullanmaz. Yalnızca reklam veya analiz
               hizmetleri etkinleştirildiğinde ilgili üçüncü taraf çerezleri kullanılabilir.
-              Ayrıntılar için <a href="/cerez-politikasi/" className="text-brand-600 underline">Çerez Politikası</a> sayfamıza bakınız.
+              Ayrıntılar için <Link href="/cerez-politikasi/" className="text-brand-600 underline">Çerez Politikası</Link> sayfamıza bakınız.
             </p>
           ),
         },

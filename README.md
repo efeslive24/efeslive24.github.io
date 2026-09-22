@@ -67,6 +67,29 @@ node scripts/serve-out.cjs   # http://localhost:8734
 
 **Alan adı ve DNS:** Pages projesi → "Custom domains" ile kendi alan adınızı bağlayın (DNS kayıtları Cloudflare tarafından yönlendirilir). Ardından `NEXT_PUBLIC_SITE_URL` değerini güncelleyip **yeniden derleyin** — sitemap ve canonical adresleri bu değerden üretilir.
 
+### Alternatif: GitHub Pages (hesap gerektirmez — GitHub hesabınız yeter)
+
+Statik çıktı olduğu için site, GitHub hesabınızla ücretsiz yayınlanabilir:
+
+```bash
+# Alt yol derlemesi (depo adınıza göre)
+# Windows/Git Bash: MSYS_NO_PATHCONV=1 gerekir
+NEXT_PUBLIC_BASE_PATH=/free-online-tools \
+NEXT_PUBLIC_SITE_URL=https://KULLANICIADI.github.io/free-online-tools \
+npm run build
+
+# out/ içeriğini gh-pages dalına yükle
+git clone --no-checkout . /tmp/gh-pages-deploy
+cd /tmp/gh-pages-deploy
+git remote set-url origin https://github.com/KULLANICIADI/free-online-tools.git
+git switch --orphan gh-pages
+cp -r <PROJE_YOLU>/out/. .
+git add -A && git commit -m "Deploy: GitHub Pages"
+git push -u origin gh-pages
+```
+
+Site `https://KULLANICIADI.github.io/free-online-tools/` adresinde yayınlanır. Not: GitHub Pages `_headers` güvenlik başlıklarını uygulamaz; üretim için önerilen yol Cloudflare Pages'tır. Kök alan adında yayın için `NEXT_PUBLIC_BASE_PATH` değerini boş bırakın.
+
 ## Worker kurulumu (URL kısaltıcı + yönlendirme kontrolü)
 
 Bu iki araç, tarayıcı güvenlik kuralları nedeniyle küçük bir sunucu bileşeni gerektirir. Kod hazırdır (`worker/`); kurulum sizin Cloudflare hesabınızla yapılır:

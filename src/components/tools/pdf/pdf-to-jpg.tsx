@@ -8,9 +8,10 @@ import { downloadBlob } from "@/components/ui/copy-button";
 import { Label, Input, Select } from "@/components/ui/field";
 import { parsePageRanges, formatBytes, dataUrlToBlob } from "../media-utils";
 import { IconBolt, IconDownload } from "@/components/icons";
+import { PDFJS_WORKER_SRC } from "@/lib/constants/site";
 
-// Çalışan dosyası build sırasında scripts/copy-assets.mjs ile public/pdfjs'e kopyalanır.
-pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.mjs";
+// Worker dosyası derleme öncesi scripts/copy-assets.mjs ile public/pdfjs/ altına kopyalanır.
+pdfjs.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_SRC;
 
 interface Result {
   url: string;
